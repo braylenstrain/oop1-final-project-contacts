@@ -1,7 +1,7 @@
 
 public class SetPersonalEmail extends Contact {
 	@Override
-	public void set(String personalEmail, Contact contact) {
-		contact.setPersonalEmail(personalEmail);
+	public void set(String personalEmailAddress, Contact contact) {
+		contact.setPersonalEmailAddress(personalEmailAddress);
 	}
 }

@@ -1,7 +1,7 @@
 
 public class SetWorkEmail extends Contact {
 	@Override
-	public void set(String workEmail, Contact contact) {
-		contact.setWorkEmail(workEmail);
+	public void set(String workEmailAddress, Contact contact) {
+		contact.setWorkEmailAddress(workEmailAddress);
 	}
 }
