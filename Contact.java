@@ -9,8 +9,8 @@ public class Contact implements Set{
 	private String lastName;
 	private String personalPhoneNumber;
 	private String workPhoneNumber;
-	private String personalEmail;
-	private String workEmail;
+	private String personalEmailAddress;
+	private String workEmailAddress;
 	
 	public String getFirstName() {
 		return firstName;
@@ -44,24 +44,24 @@ public class Contact implements Set{
 	}
 	
 	
-	public String getPersonalEmail() {
-		return personalEmail;
+	public String getPersonalEmailAddress() {
+		return personalEmailAddress;
 	}
-	public void setPersonalEmail(String personalEmail) {
-		this.personalEmail = personalEmail;
+	public void setPersonalEmailAddress(String personalEmailAddress) {
+		this.personalEmailAddress = personalEmailAddress;
 	}
 	
 	
-	public String getWorkEmail() {
-		return workEmail;
+	public String getWorkEmailAddress() {
+		return workEmailAddress;
 	}
-	public void setWorkEmail(String workEmail) {
-		this.workEmail = workEmail;
+	public void setWorkEmailAddress(String workEmailAddress) {
+		this.workEmailAddress = workEmailAddress;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("First Name: %s, Last Name: %s, PPN: %s, WPN: %s, Personal Email: %s, Work Email: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmail(), getWorkEmail() );
+		return String.format("First Name: %s, Last Name: %s, PPN: %s, WPN: %s, Personal EmailAddress: %s, Work EmailAddress: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmailAddress(), getWorkEmailAddress() );
 	}
 
 	
