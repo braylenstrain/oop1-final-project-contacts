@@ -4,13 +4,13 @@
  * 
  * This class stores Contact information about people.
  */
-public class Contact {
+public class Contact implements Set{
 	private String firstName;
 	private String lastName;
 	private String personalPhoneNumber;
 	private String workPhoneNumber;
-	private String personalEmailAddress;
-	private String workEmailAddress;
+	private String personalEmail;
+	private String workEmail;
 	
 	public String getFirstName() {
 		return firstName;
@@ -44,18 +44,29 @@ public class Contact {
 	}
 	
 	
-	public String getPersonalEmailAddress() {
-		return personalEmailAddress;
+	public String getPersonalEmail() {
+		return personalEmail;
 	}
-	public void setPersonalEmailAddress(String personalEmailAddress) {
-		this.personalEmailAddress = personalEmailAddress;
+	public void setPersonalEmail(String personalEmail) {
+		this.personalEmail = personalEmail;
 	}
 	
 	
-	public String getWorkEmailAddress() {
-		return workEmailAddress;
+	public String getWorkEmail() {
+		return workEmail;
 	}
-	public void setWorkEmailAddress(String workEmailAddress) {
-		this.workEmailAddress = workEmailAddress;
+	public void setWorkEmail(String workEmail) {
+		this.workEmail = workEmail;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("First Name: %s, Last Name: %s, PPN: %s, WPN: %s, Personal Email: %s, Work Email: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmail(), getWorkEmail() );
+	}
+
+	
+	@Override
+	public void set(String s, Contact c) {
+		
 	}
 }
