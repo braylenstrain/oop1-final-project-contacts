@@ -1,3 +1,4 @@
+/*
  * Author: Braylen Strain
  * Date:
  * 
@@ -6,7 +7,6 @@
 import java.util.*;
 
 public class ContactsApp {
-	
 	private static final Scanner USERINPUT = new Scanner(System.in);
 	final static int NUMBER_OF_DATA_FIELDS = 6;
 
@@ -43,9 +43,31 @@ public class ContactsApp {
 			}
 		}
 		//Send user to homepage
-		//TODO
-		System.out.println("Execute homepage method/write out homepage in main method");
-		
+		String choice = "";
+		while (!choice.equals("6")) {
+			System.out.println("Homepage:");
+			System.out.println("1) Display Contacts");
+			System.out.println("2) Add Contacts");
+			System.out.println("3) Delete Contacts");
+			System.out.println("4) Modify Contacts");
+			System.out.println("5) Search Contacts");
+			System.out.println("6) Exit Program");
+			System.out.print("What would you like to do? (Choose a number): ");
+			choice = USERINPUT.nextLine().trim();
+			System.out.println();
+			
+			//Activate action based on user input
+			//TODO replace print statements with methods
+			switch (choice) {
+			case "1": System.out.println("displayContacts"); break;
+			case "2": System.out.println("addContacts"); break;
+			case "3": System.out.println("deleteContacts"); break;
+			case "4": System.out.println("modifyContacts"); break;
+			case "5": System.out.println("searchContacts"); break;
+			case "6": System.out.println("exitProgram"); break;
+			default: System.out.println("Invalid input, please type a number 1-6.");
+			}
+		}
 	}
 	
 	//Add contacts to ArrayList contacts
