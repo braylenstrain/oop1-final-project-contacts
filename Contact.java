@@ -5,12 +5,12 @@
  * This class stores Contact information about people.
  */
 public class Contact implements Set{
-	private String firstName;
-	private String lastName;
-	private String personalPhoneNumber;
-	private String workPhoneNumber;
-	private String personalEmailAddress;
-	private String workEmailAddress;
+	private String firstName = "N/A";
+	private String lastName = "N/A";
+	private String personalPhoneNumber = "N/A";
+	private String workPhoneNumber = "N/A";
+	private String personalEmailAddress = "N/A";
+	private String workEmailAddress = "N/A";
 	
 	public String getFirstName() {
 		return firstName;
