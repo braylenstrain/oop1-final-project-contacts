@@ -59,8 +59,8 @@ public class ContactsApp {
 			//Activate action based on user input
 			//TODO replace print statements with methods
 			switch (choice) {
-			case "1": System.out.println("displayContacts"); break;
-			case "2": System.out.println("addContacts"); break;
+			case "1": displayContacts(contacts); break;
+			case "2": addContacts(contacts); break;
 			case "3": System.out.println("deleteContacts"); break;
 			case "4": System.out.println("modifyContacts"); break;
 			case "5": System.out.println("searchContacts"); break;
@@ -93,7 +93,7 @@ public class ContactsApp {
 		for (int i = 0; i < newContactsAmount; i++) {
 			Contact contact = new Contact();
 			String[] contactInfo = new String[NUMBER_OF_DATA_FIELDS];
-			Set[] command = {new SetFirstName(), new SetLastName(), new SetPersonalPhone(), new SetWorkPhone(), new SetPersonalEmail(), new SetWorkEmail()};
+			SetContact[] command = {new SetFirstName(), new SetLastName(), new SetPersonalPhone(), new SetWorkPhone(), new SetPersonalEmail(), new SetWorkEmail()};
 			
 			//Store user input in contactInfo array
 			System.out.println("Contact #" + (i + 1));
@@ -121,6 +121,63 @@ public class ContactsApp {
 			//Store contact in contacts
 			contacts.add(contact);
 		}
+	}
+	
+	//Display the data fields of all the Contact objects currently in the contacts ArrayList
+	public static void displayContacts(ArrayList<Contact> contacts) {
+		String[] temp = new String[contacts.size()];
+		int tempIndex = 0;
+		
+		//User decides to alphabetize by first or last name
+		boolean alphabetizeFirstName = true;
+		System.out.print("Alphabetize by first name or last name? (Type \"First\" or \"Last\"): ");
+		if (USERINPUT.nextLine().trim().equalsIgnoreCase("Last")) {
+			alphabetizeFirstName = false;
+		}
+		System.out.println();
+		
+		//Print header for contacts display
+		System.out.printf("%-30s%-30s%-30s%-30s%-30s\n", "Name", "Personal Phone #", "Work Phone #", "Personal E-mail Address", "Work E-mail Address");
+		System.out.printf("-".repeat(150));
+		System.out.println();
+		
+
+		
+		//Store each contact's info from contacts ArrayList into temp Array, then sort temp based on what user decided and print to console
+		for (Contact contact: contacts) {
+			String fullName = "";
+			
+			//Alphabetize by first name, exclude any fields with "N/A"
+			if (alphabetizeFirstName) {
+				if (contact.getFirstName().equals("N/A")) {
+					fullName = "~(No first name)~ " + contact.getLastName();
+				} else if (contact.getLastName().equals("N/A")) {
+					fullName = contact.getFirstName();
+				} else {
+					fullName = contact.getFirstName() + " " + contact.getLastName();
+				}
+			
+			//Alphabetize by last name, exclude any fields with "N/A"	
+			} else {
+				if (contact.getFirstName().equals("N/A")) {
+					fullName = contact.getLastName();
+				} else if (contact.getLastName().equals("N/A")) {
+					fullName = "~(No last name)~, " + contact.getFirstName();
+				} else {
+					fullName = contact.getLastName() + ", " + contact.getFirstName();
+				}
+			}
+			
+			temp[tempIndex] = String.format("%-30s%-30s%-30s%-30s%-30s", fullName, contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
+			tempIndex++;
+		}
+		
+		//Print sorted temp Array
+		Arrays.sort(temp);
+		for (int i = 0; i < temp.length; i++) {
+			System.out.println(temp[i]);
+		}
+		System.out.println();
 	}
 	
 	//for loop to print out contact info
