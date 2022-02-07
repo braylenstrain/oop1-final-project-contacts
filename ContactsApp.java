@@ -32,12 +32,10 @@ public class ContactsApp {
 			if (answer.equalsIgnoreCase("File")) {
 				//TODO
 				System.out.println("Execute file upload method");
-				
 			//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
 			} else if (answer.equalsIgnoreCase("New")){
 				addContacts(contacts);
 				break;
-			
 			//Any other input restarts the while loop.	
 			} else {
 				System.out.println("Invalid input.");
@@ -63,7 +61,7 @@ public class ContactsApp {
 			switch (choice) {
 			case "1": displayContacts(contacts); break;
 			case "2": addContacts(contacts); break;
-			case "3": System.out.println("deleteContacts"); break;
+			case "3": deleteContact(contacts); break;
 			case "4": System.out.println("modifyContacts"); break;
 			case "5": searchContacts(contacts); break;
 			case "6": System.out.println("exitProgram"); break;
@@ -150,7 +148,8 @@ public class ContactsApp {
 		
 		//Print header for contacts display
 		System.out.printf("%-30s%-30s%-30s%-30s%-30s\n", "Name", "Personal Phone #", "Work Phone #", "Personal E-mail Address", "Work E-mail Address");
-		System.out.printf("-".repeat(150));
+		repeat("-", 150);
+		//System.out.printf("-".repeat(150));
 		System.out.println();
 		
 
@@ -168,7 +167,6 @@ public class ContactsApp {
 				} else {
 					fullName = contact.getFirstName() + " " + contact.getLastName();
 				}
-			
 			//Alphabetize by last name, exclude any names with "N/A"	
 			} else {
 				if (contact.getFirstName().equals("N/A")) {
@@ -201,25 +199,52 @@ public class ContactsApp {
 		String choice = USERINPUT.nextLine().trim();
 		System.out.println();
 		
-		//Use searchByName method to create an array of matching contacts and display them
+		//Use searchByName method to create an array of matching contacts
 		if (choice.equalsIgnoreCase("Name")) {
 			temp = searchByName(contacts);
-			if (temp.size() > 0) {
-				System.out.println("Results found.");
-			displayContacts(temp);
-			} else {
-				System.out.println("No matches found.\n");
-			}
-			
-		//Store matching contacts by info into temp ArrayList and display it
+//			if (temp.size() > 0) {
+//				System.out.println("Results found.");
+//			displayContacts(temp);
+//			} else {
+//				System.out.println("No matches found.\n");
+//			}
+		//Store matching contacts by info into temp ArrayList
 		} else if (choice.equalsIgnoreCase("Info")) {
 			//TODO Search using contact info (display same way as above)
-			System.out.println("hihi");
-			
+			System.out.print("Type in all or part of the phone number or email address you want to search for(Phone # format must be the same(e.g. using hyphens)): ");
+			String searchString = USERINPUT.nextLine();
+			System.out.println();
+			for (Contact contact: contacts) {
+				if (contact.getPersonalPhoneNumber().contains(searchString)
+				|| contact.getWorkPhoneNumber().contains(searchString)
+				|| contact.getPersonalEmailAddress().toLowerCase().contains(searchString.toLowerCase())
+				|| contact.getWorkEmailAddress().toLowerCase().contains(searchString.toLowerCase())) {
+					temp.add(contact);
+				}
+			}
 		//Invalid input returns to Homepage	
 		} else {
 			System.out.println("Invalid input. Returning to Homepage.");
+			return;
 		}
+		
+		//If contacts are found based on search, display temp ArrayList
+		if (temp.size() > 0) {
+			System.out.println("Results found.");
+		displayContacts(temp);
+		} else {
+			System.out.println("No matches found.\n");
+		}
+	}
+	
+	//INCOMPLETE!!! Delete a contact from contacts ArrayList
+	public static void deleteContact(ArrayList<Contact> contacts) {
+		ArrayList<Contact> temp = new ArrayList<>();
+		
+		System.out.println("Input the name of the contact you would like to delete.");
+		temp = searchByName(contacts);
+		
+		
 	}
 	
 	//Returns an Array of every contact with the matching name and their info
@@ -241,6 +266,13 @@ public class ContactsApp {
 			}
 		}
 		return temp;
+	}
+	
+	//Substitute for String.repeat method since it doesn't work with JavaSE 1.8
+	public static void repeat(String s, int count) {
+		for (int i = 0; i < count; i++) {
+			System.out.print(s);
+		}
 	}
 	
 	//for loop to print out contact info
