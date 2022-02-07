@@ -4,7 +4,7 @@
  * 
  * This class stores Contact information about people.
  */
-public class Contact implements Set{
+public class Contact implements SetContact, Comparable<Contact>{
 	private String firstName = "N/A";
 	private String lastName = "N/A";
 	private String personalPhoneNumber = "N/A";
@@ -64,9 +64,23 @@ public class Contact implements Set{
 		return String.format("First Name: %s, Last Name: %s, PPN: %s, WPN: %s, Personal EmailAddress: %s, Work EmailAddress: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmailAddress(), getWorkEmailAddress() );
 	}
 
-	
+	//Meant to be overridden by a Set... Class
 	@Override
 	public void set(String s, Contact c) {
-		
 	}
+	
+	@Override
+	public int compareTo(Contact o) {
+		System.out.println("YOU USED CONTACT compareTo NOT A SUBCLASS");
+		return 0;
+	}
+	
+//	@Override
+//	public boolean equals(Object o) {
+//		if (o instanceof Contact) {
+//			if (firstName.equal)
+//		} else {
+//			return false;
+//		}
+//	}
 }
