@@ -71,16 +71,23 @@ public class Contact implements SetContact, Comparable<Contact>{
 	
 	@Override
 	public int compareTo(Contact o) {
-		System.out.println("YOU USED CONTACT compareTo NOT A SUBCLASS");
-		return 0;
+		if (firstName.compareToIgnoreCase(o.getFirstName()) > 0) {
+			return 1;
+		} else if (firstName.compareToIgnoreCase(o.getFirstName()) > 0) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 	
 //	@Override
 //	public boolean equals(Object o) {
 //		if (o instanceof Contact) {
-//			if (firstName.equal)
-//		} else {
-//			return false;
+//			if (firstName.equalsIgnoreCase((((Contact)o).getFirstName())) && lastName.equalsIgnoreCase(((Contact)o).getLastName())) {
+//				return true;
+//			}
 //		}
+//		
+//		return false;
 //	}
 }
