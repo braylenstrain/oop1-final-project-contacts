@@ -25,23 +25,25 @@ public class ContactsApp {
 		while (contacts.isEmpty()) {
 			System.out.println("Would you like to input a file name to input contacts, or create a new contacts list?");
 			System.out.print("Type \"File\" or \"New\": ");
-			String answer = USERINPUT.nextLine();
+			String answer = USERINPUT.nextLine().trim();
 			System.out.println();
 			
 			//If user inputs File, execute file upload method.
-			//If user inputs New, execute create new contacts method.
-			//Any other input restarts the while loop.
 			if (answer.equalsIgnoreCase("File")) {
 				//TODO
 				System.out.println("Execute file upload method");
 				
+			//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
 			} else if (answer.equalsIgnoreCase("New")){
 				addContacts(contacts);
+				break;
 			
+			//Any other input restarts the while loop.	
 			} else {
 				System.out.println("Invalid input.");
 			}
 		}
+		
 		//Send user to homepage
 		String choice = "";
 		while (!choice.equals("6")) {
@@ -63,14 +65,14 @@ public class ContactsApp {
 			case "2": addContacts(contacts); break;
 			case "3": System.out.println("deleteContacts"); break;
 			case "4": System.out.println("modifyContacts"); break;
-			case "5": System.out.println("searchContacts"); break;
+			case "5": searchContacts(contacts); break;
 			case "6": System.out.println("exitProgram"); break;
 			default: System.out.println("Invalid input, please type a number 1-6.");
 			}
 		}
 	}
 	
-	//Add contacts to ArrayList contacts
+	//Add contacts to contacts ArrayList
 	public static void addContacts(ArrayList<Contact> contacts) {
 		int newContactsAmount = -1;
 		
@@ -88,38 +90,40 @@ public class ContactsApp {
 			}
 		}
 		
-		//User inputs information for each data field in each Contact object
-		System.out.println("Type in the information for each contact, or press enter to skip.\n");
-		for (int i = 0; i < newContactsAmount; i++) {
-			Contact contact = new Contact();
-			String[] contactInfo = new String[NUMBER_OF_DATA_FIELDS];
-			SetContact[] command = {new SetFirstName(), new SetLastName(), new SetPersonalPhone(), new SetWorkPhone(), new SetPersonalEmail(), new SetWorkEmail()};
-			
-			//Store user input in contactInfo array
-			System.out.println("Contact #" + (i + 1));
-			System.out.print("First Name: ");
-			contactInfo[0] = USERINPUT.nextLine();
-			System.out.print("Last Name: ");
-			contactInfo[1] = USERINPUT.nextLine();
-			System.out.print("Personal Phone Number: ");
-			contactInfo[2] = USERINPUT.nextLine();
-			System.out.print("Work Phone Number: ");
-			contactInfo[3] = USERINPUT.nextLine();
-			System.out.print("Personal E-mail: ");
-			contactInfo[4] = USERINPUT.nextLine();
-			System.out.print("Work E-mail: ");
-			contactInfo[5] = USERINPUT.nextLine();
-			System.out.println();
-			
-			//Import data from contactInfo array into contact data fields using the different Set... classes that implement the Set interface
-			for (int j = 0; j < NUMBER_OF_DATA_FIELDS; j++) {
-				if (contactInfo[j].trim().length() != 0) {
-					command[j].set(contactInfo[j].trim(), contact);
+		if (newContactsAmount > 0) {
+			//User inputs information for each data field in each Contact object
+			System.out.println("Type in the information for each contact, or press enter to skip.\n");
+			for (int i = 0; i < newContactsAmount; i++) {
+				Contact contact = new Contact();
+				String[] contactInfo = new String[NUMBER_OF_DATA_FIELDS];
+				SetContact[] command = {new SetFirstName(), new SetLastName(), new SetPersonalPhone(), new SetWorkPhone(), new SetPersonalEmail(), new SetWorkEmail()};
+				
+				//Store user input in contactInfo array
+				System.out.println("Contact #" + (i + 1));
+				System.out.print("First Name: ");
+				contactInfo[0] = USERINPUT.nextLine();
+				System.out.print("Last Name: ");
+				contactInfo[1] = USERINPUT.nextLine();
+				System.out.print("Personal Phone Number: ");
+				contactInfo[2] = USERINPUT.nextLine();
+				System.out.print("Work Phone Number: ");
+				contactInfo[3] = USERINPUT.nextLine();
+				System.out.print("Personal E-mail: ");
+				contactInfo[4] = USERINPUT.nextLine();
+				System.out.print("Work E-mail: ");
+				contactInfo[5] = USERINPUT.nextLine();
+				System.out.println();
+				
+				//Import data from contactInfo array into contact data fields using the different Set... classes that implement the Set interface
+				for (int j = 0; j < NUMBER_OF_DATA_FIELDS; j++) {
+					if (contactInfo[j].trim().length() != 0) {
+						command[j].set(contactInfo[j].trim(), contact);
+					}
 				}
+				
+				//Store contact in contacts
+				contacts.add(contact);
 			}
-			
-			//Store contact in contacts
-			contacts.add(contact);
 		}
 	}
 	
@@ -127,13 +131,21 @@ public class ContactsApp {
 	public static void displayContacts(ArrayList<Contact> contacts) {
 		String[] temp = new String[contacts.size()];
 		int tempIndex = 0;
-		
-		//User decides to alphabetize by first or last name
 		boolean alphabetizeFirstName = true;
+
+		//User decides to alphabetize by first or last name. Invalid input returns to Homepage.
 		System.out.print("Alphabetize by first name or last name? (Type \"First\" or \"Last\"): ");
-		if (USERINPUT.nextLine().trim().equalsIgnoreCase("Last")) {
+		String choice = USERINPUT.nextLine().trim();
+		
+		if (choice.equalsIgnoreCase("First")) {
+			alphabetizeFirstName = true;
+		} else if (choice.equalsIgnoreCase("Last")) {
 			alphabetizeFirstName = false;
+		} else {
+			System.out.println("Invalid input. Returning to Homepage.");
+			return;
 		}
+		
 		System.out.println();
 		
 		//Print header for contacts display
@@ -147,7 +159,7 @@ public class ContactsApp {
 		for (Contact contact: contacts) {
 			String fullName = "";
 			
-			//Alphabetize by first name, exclude any fields with "N/A"
+			//Alphabetize by first name, exclude any names with "N/A"
 			if (alphabetizeFirstName) {
 				if (contact.getFirstName().equals("N/A")) {
 					fullName = "~(No first name)~ " + contact.getLastName();
@@ -157,7 +169,7 @@ public class ContactsApp {
 					fullName = contact.getFirstName() + " " + contact.getLastName();
 				}
 			
-			//Alphabetize by last name, exclude any fields with "N/A"	
+			//Alphabetize by last name, exclude any names with "N/A"	
 			} else {
 				if (contact.getFirstName().equals("N/A")) {
 					fullName = contact.getLastName();
@@ -178,6 +190,57 @@ public class ContactsApp {
 			System.out.println(temp[i]);
 		}
 		System.out.println();
+	}
+	
+	//Search for contact info based on any data field
+	public static void searchContacts(ArrayList<Contact> contacts) {
+		ArrayList<Contact> temp = new ArrayList<>();
+		
+		//User chooses to search by name or contact info. Invalid input returns to the Homepage.
+		System.out.print("Would you like to search by contact name or contact info? (Type \"Name\" or \"Info\"): ");
+		String choice = USERINPUT.nextLine().trim();
+		System.out.println();
+		
+		//Use searchByName method to create an array of matching contacts and display them
+		if (choice.equalsIgnoreCase("Name")) {
+			temp = searchByName(contacts);
+			if (temp.size() > 0) {
+				System.out.println("Results found.");
+			displayContacts(temp);
+			} else {
+				System.out.println("No matches found.\n");
+			}
+			
+		//Store matching contacts by info into temp ArrayList and display it
+		} else if (choice.equalsIgnoreCase("Info")) {
+			//TODO Search using contact info (display same way as above)
+			System.out.println("hihi");
+			
+		//Invalid input returns to Homepage	
+		} else {
+			System.out.println("Invalid input. Returning to Homepage.");
+		}
+	}
+	
+	//Returns an Array of every contact with the matching name and their info
+	public static ArrayList<Contact> searchByName(ArrayList<Contact> contacts) {
+		ArrayList<Contact> temp = new ArrayList<>();
+		
+		//Get first and/or last name from user
+		System.out.print("Type in first name (or 0 if N/A): ");
+		String firstName = USERINPUT.nextLine();
+		System.out.print("Type in last name (or 0 if N/A): ");
+		String lastName = USERINPUT.nextLine();
+		System.out.println();
+		
+		//If user input matches a contact, add it to temp ArrayList
+		for (Contact contact: contacts) {
+			if (contact.getFirstName().equalsIgnoreCase(firstName) && (contact.getLastName().equalsIgnoreCase(lastName) || lastName.trim().equals("0")) 
+			|| (contact.getLastName().equalsIgnoreCase(lastName) && firstName.trim().equals("0"))) {
+				temp.add(contact);
+			}
+		}
+		return temp;
 	}
 	
 	//for loop to print out contact info
