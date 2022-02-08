@@ -61,7 +61,7 @@ public class Contact implements SetContact, Comparable<Contact>{
 	
 	@Override
 	public String toString() {
-		return String.format("First Name: %s, Last Name: %s, PPN: %s, WPN: %s, Personal EmailAddress: %s, Work EmailAddress: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmailAddress(), getWorkEmailAddress() );
+		return String.format("First Name: %s, Last Name: %s, Personal Phone Number: %s, Work Phone Number: %s, Personal Email Address: %s, Work Email Address: %s", getFirstName(), getLastName(), getPersonalPhoneNumber(), getWorkPhoneNumber(), getPersonalEmailAddress(), getWorkEmailAddress() );
 	}
 
 	//Meant to be overridden by a Set... Class
@@ -80,14 +80,13 @@ public class Contact implements SetContact, Comparable<Contact>{
 		}
 	}
 	
-//	@Override
-//	public boolean equals(Object o) {
-//		if (o instanceof Contact) {
-//			if (firstName.equalsIgnoreCase((((Contact)o).getFirstName())) && lastName.equalsIgnoreCase(((Contact)o).getLastName())) {
-//				return true;
-//			}
-//		}
-//		
-//		return false;
-//	}
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Contact) {
+			if (toString().equals(((Contact)o).toString())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
