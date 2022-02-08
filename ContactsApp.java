@@ -62,7 +62,7 @@ public class ContactsApp {
 			case "1": displayContacts(contacts); break;
 			case "2": addContacts(contacts); break;
 			case "3": deleteContact(contacts); break;
-			case "4": System.out.println("modifyContacts"); break;
+			case "4": modifyContact(contacts); break;
 			case "5": searchContacts(contacts); break;
 			case "6": System.out.println("exitProgram"); break;
 			default: System.out.println("Invalid input, please type a number 1-6.");
@@ -142,7 +142,7 @@ public class ContactsApp {
 			} else if (choice.equalsIgnoreCase("Last")) {
 				alphabetizeFirstName = false;
 			} else {
-				System.out.println("Invalid input. Returning to Homepage.");
+				System.out.println("\nInvalid input. Returning to Homepage.");
 				return;
 			}
 			
@@ -171,10 +171,10 @@ public class ContactsApp {
 					}
 				//Alphabetize by last name, exclude any names with "N/A"	
 				} else {
-					if (contact.getFirstName().equals("N/A")) {
-						fullName = contact.getLastName();
-					} else if (contact.getLastName().equals("N/A")) {
+					if (contact.getLastName().equals("N/A")) {
 						fullName = "~(No last name)~, " + contact.getFirstName();
+					} else if (contact.getFirstName().equals("N/A")) {
+						fullName = contact.getLastName();
 					} else {
 						fullName = contact.getLastName() + ", " + contact.getFirstName();
 					}
@@ -259,8 +259,59 @@ public class ContactsApp {
 			} else {
 				contacts.remove(0);
 			}
-			
 		System.out.println("Deletion complete.\n");
+		//No matches found
+		} else {
+			System.out.println("No matches found. \n");
+		}
+	}
+	
+	public static void modifyContact(ArrayList<Contact> contacts) {
+		ArrayList<Contact> temp = new ArrayList<>();
+		Contact tempContact;
+		//Search for contact to modify by name
+		System.out.println("Input the name of the contact you would like to modify.");
+		temp = searchByName(contacts);
+		
+		//If contact was found, set tempContact to that contact. If multiple contacts were found, user chooses which to modify.
+		if (temp.size() > 0) {
+			if (temp.size() > 1) {
+				tempContact = multipleMatchesFound(temp, "modify");
+			} else {
+				tempContact = temp.get(0);
+			}
+		
+			//Combine first and last name of Contact so it will print to console pretty
+			StringBuilder fullName = new StringBuilder();
+			if (!tempContact.getFirstName().equals("N/A")) {
+				fullName.append(tempContact.getFirstName());
+			}
+			
+			if (!tempContact.getLastName().equals("N/A")) {
+				fullName.append(" " + tempContact.getLastName());
+			}
+			
+			//Get keyword and new info from user
+			System.out.printf("Use the following keywords to modify %s's info:\n", fullName);
+			System.out.println("FN = First Name, LN = Last Name, PPN = Personal Phone number, WPN = Work Phone Number, PE = Personal Email Address, WE = Work Email Address");
+			System.out.println("Type in a keyword, followed by a space, followed by the new information about the contact. (e.g. \"PPN 5551234567\" changes the contact's personal phone number)");
+			String keyword = USERINPUT.next().toUpperCase();
+			String newInfo = USERINPUT.nextLine().trim();
+			if (newInfo.equals("")) {
+				newInfo = "N/A";
+			}
+		
+			switch (keyword) {
+			case "FN": tempContact.setFirstName(newInfo); break;
+			case "LN": tempContact.setLastName(newInfo); break;
+			case "PPN": tempContact.setPersonalPhoneNumber(newInfo); break;
+			case "WPN": tempContact.setWorkPhoneNumber(newInfo); break;
+			case "PE": tempContact.setPersonalEmailAddress(newInfo); break;
+			case "WE": tempContact.setWorkEmailAddress(newInfo); break;
+			default: System.out.println("Invalid input for keyword or new info. Nothing was changed.");
+		}
+		System.out.println("Modification complete.\n");
+		//No matches found
 		} else {
 			System.out.println("No matches found. \n");
 		}
@@ -271,10 +322,10 @@ public class ContactsApp {
 		ArrayList<Contact> temp = new ArrayList<>();
 		
 		//Get first and/or last name from user
-		System.out.print("Type in first name (or 0 if N/A): ");
-		String firstName = USERINPUT.nextLine();
-		System.out.print("Type in last name (or 0 if N/A): ");
-		String lastName = USERINPUT.nextLine();
+		System.out.print("Type in first name (or 0 if none/don't know): ");
+		String firstName = USERINPUT.nextLine().trim();
+		System.out.print("Type in last name (or 0 if none/don't know): ");
+		String lastName = USERINPUT.nextLine().trim();
 		System.out.println();
 		
 		//If user input matches a contact, add it to temp ArrayList
