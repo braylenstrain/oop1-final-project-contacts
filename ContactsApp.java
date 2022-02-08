@@ -38,10 +38,10 @@ public class ContactsApp {
 					System.out.print("Input file name: ");
 					File file = new File(USERINPUT.nextLine());
 					System.out.println();
-					if (file.exists()) {
+					if (file.length() != 0) {
 					addContactsFromFile(contacts, file);
 					} else {
-						System.out.println("File not found.");
+						System.out.println("File not found or is empty.");
 					}
 				//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
 				} else if (answer.equalsIgnoreCase("New")){
@@ -218,12 +218,6 @@ public class ContactsApp {
 		//Use searchByName method to create an array of matching contacts
 		if (choice.equalsIgnoreCase("Name")) {
 			temp = searchByName(contacts);
-//			if (temp.size() > 0) {
-//				System.out.println("Results found.");
-//			displayContacts(temp);
-//			} else {
-//				System.out.println("No matches found.\n");
-//			}
 		//Store matching contacts by info into temp ArrayList
 		} else if (choice.equalsIgnoreCase("Info")) {
 			System.out.print("Type in all or part of the phone number or email address you want to search for(Phone # format must be the same(e.g. using hyphens)): ");
