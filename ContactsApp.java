@@ -160,8 +160,7 @@ public class ContactsApp {
 			
 			//Print header for contacts display
 			System.out.printf("%-30s%-30s%-30s%-30s%-30s\n", "Name", "Personal Phone #", "Work Phone #", "Personal E-mail Address", "Work E-mail Address");
-			repeat("-", 150);
-			//System.out.printf("-".repeat(150));
+			repeat("-", 150); //System.out.printf("-".repeat(150));
 			System.out.println();
 			
 	
