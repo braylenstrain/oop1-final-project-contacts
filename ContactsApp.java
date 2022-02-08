@@ -17,7 +17,6 @@ public class ContactsApp {
 		
 		//Check for file name as command line argument to upload contacts
 		if (args.length == 1) {
-			//TODO upload contacts from file in CL arg
 			//File equals arg, if file exists input contacts
 			File file = new File(args[0]);
 			if (file.exists()) {
@@ -203,7 +202,7 @@ public class ContactsApp {
 			System.out.println();
 		//No contacts to display	
 		} else {
-			System.out.println("You have currently have no contacts.\n");
+			System.out.println("You currently have no contacts.\n");
 		}
 	}
 	
@@ -264,12 +263,13 @@ public class ContactsApp {
 		
 		//If contact was found, delete contact. If multiple contacts were found, user chooses which to delete.
 		if (temp.size() > 0) {
+			Contact tempContact;
 			if (temp.size() > 1) {
-				Contact tempContact = multipleMatchesFound(temp, "delete");
-				contacts.remove(tempContact);
+				tempContact = multipleMatchesFound(temp, "delete");
 			} else {
-				contacts.remove(0);
+				tempContact = temp.get(0);
 			}
+			contacts.remove(tempContact);
 		System.out.println("Deletion complete.\n");
 		//No matches found
 		} else {
@@ -319,7 +319,7 @@ public class ContactsApp {
 			case "WPN": tempContact.setWorkPhoneNumber(newInfo); break;
 			case "PE": tempContact.setPersonalEmailAddress(newInfo); break;
 			case "WE": tempContact.setWorkEmailAddress(newInfo); break;
-			default: System.out.println("Invalid input for keyword or new info. Nothing was changed.");
+			default: System.out.println("Invalid input for keyword/new info. Nothing was changed.");
 		}
 		System.out.println("Modification complete.\n");
 		//No matches found
@@ -337,10 +337,9 @@ public class ContactsApp {
 			String answer = USERINPUT.nextLine().trim();
 			System.out.println();
 			
+			//Save contacts to file
 			if (answer.equalsIgnoreCase("Yes") || answer.equalsIgnoreCase("Y")) {
 				goodInput = true;
-				//TODO if used file to upload, ask if they want to use that file or create new
-				//Assume they said to create new file
 				System.out.printf("Type in the name of the file you would like to save your contacts to: ");
 				file = new File (USERINPUT.nextLine());
 				PrintWriter fileOutput = new PrintWriter(file);
@@ -348,13 +347,16 @@ public class ContactsApp {
 					fileOutput.printf("%s %s %s %s %s %s", contact.getFirstName(), contact.getLastName(), contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
 					fileOutput.println();
 				}
+				System.out.println("Save Successful.");
 				fileOutput.close();
+			//Don't save contacts	
 			} else if (answer.equalsIgnoreCase("No") || answer.equalsIgnoreCase("N")) {
 				goodInput = true;
 			} else {
 				System.out.println("Invalid Input.");
 			}
 		}
+		System.out.println("Program terminated.");
 		System.exit(0);
 	}
 	
