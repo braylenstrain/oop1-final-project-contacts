@@ -130,64 +130,70 @@ public class ContactsApp {
 		String[] temp = new String[contacts.size()];
 		int tempIndex = 0;
 		boolean alphabetizeFirstName = true;
-
-		//User decides to alphabetize by first or last name. Invalid input returns to Homepage.
-		System.out.print("Alphabetize by first name or last name? (Type \"First\" or \"Last\"): ");
-		String choice = USERINPUT.nextLine().trim();
 		
-		if (choice.equalsIgnoreCase("First")) {
-			alphabetizeFirstName = true;
-		} else if (choice.equalsIgnoreCase("Last")) {
-			alphabetizeFirstName = false;
-		} else {
-			System.out.println("Invalid input. Returning to Homepage.");
-			return;
-		}
-		
-		System.out.println();
-		
-		//Print header for contacts display
-		System.out.printf("%-30s%-30s%-30s%-30s%-30s\n", "Name", "Personal Phone #", "Work Phone #", "Personal E-mail Address", "Work E-mail Address");
-		repeat("-", 150);
-		//System.out.printf("-".repeat(150));
-		System.out.println();
-		
-
-		
-		//Store each contact's info from contacts ArrayList into temp Array, then sort temp based on what user decided and print to console
-		for (Contact contact: contacts) {
-			String fullName = "";
+		//If contacts are in contacts ArrayList, display them.
+		if (contacts.size() > 0) {
+			//User decides to alphabetize by first or last name. Invalid input returns to Homepage.
+			System.out.print("Alphabetize by first name or last name? (Type \"First\" or \"Last\"): ");
+			String choice = USERINPUT.nextLine().trim();
 			
-			//Alphabetize by first name, exclude any names with "N/A"
-			if (alphabetizeFirstName) {
-				if (contact.getFirstName().equals("N/A")) {
-					fullName = "~(No first name)~ " + contact.getLastName();
-				} else if (contact.getLastName().equals("N/A")) {
-					fullName = contact.getFirstName();
-				} else {
-					fullName = contact.getFirstName() + " " + contact.getLastName();
-				}
-			//Alphabetize by last name, exclude any names with "N/A"	
+			if (choice.equalsIgnoreCase("First")) {
+				alphabetizeFirstName = true;
+			} else if (choice.equalsIgnoreCase("Last")) {
+				alphabetizeFirstName = false;
 			} else {
-				if (contact.getFirstName().equals("N/A")) {
-					fullName = contact.getLastName();
-				} else if (contact.getLastName().equals("N/A")) {
-					fullName = "~(No last name)~, " + contact.getFirstName();
-				} else {
-					fullName = contact.getLastName() + ", " + contact.getFirstName();
-				}
+				System.out.println("Invalid input. Returning to Homepage.");
+				return;
 			}
 			
-			temp[tempIndex] = String.format("%-30s%-30s%-30s%-30s%-30s", fullName, contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
-			tempIndex++;
+			System.out.println();
+			
+			//Print header for contacts display
+			System.out.printf("%-30s%-30s%-30s%-30s%-30s\n", "Name", "Personal Phone #", "Work Phone #", "Personal E-mail Address", "Work E-mail Address");
+			repeat("-", 150);
+			//System.out.printf("-".repeat(150));
+			System.out.println();
+			
+	
+			
+			//Store each contact's info from contacts ArrayList into temp Array, then sort temp based on what user decided and print to console
+			for (Contact contact: contacts) {
+				String fullName = "";
+				
+				//Alphabetize by first name, exclude any names with "N/A"
+				if (alphabetizeFirstName) {
+					if (contact.getFirstName().equals("N/A")) {
+						fullName = "~(No first name)~ " + contact.getLastName();
+					} else if (contact.getLastName().equals("N/A")) {
+						fullName = contact.getFirstName();
+					} else {
+						fullName = contact.getFirstName() + " " + contact.getLastName();
+					}
+				//Alphabetize by last name, exclude any names with "N/A"	
+				} else {
+					if (contact.getFirstName().equals("N/A")) {
+						fullName = contact.getLastName();
+					} else if (contact.getLastName().equals("N/A")) {
+						fullName = "~(No last name)~, " + contact.getFirstName();
+					} else {
+						fullName = contact.getLastName() + ", " + contact.getFirstName();
+					}
+				}
+				
+				temp[tempIndex] = String.format("%-30s%-30s%-30s%-30s%-30s", fullName, contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
+				tempIndex++;
+			}
+			
+			//Print sorted temp Array
+			Arrays.sort(temp);
+			for (int i = 0; i < temp.length; i++) {
+				System.out.println(temp[i]);
+			}
+			System.out.println();
+		//No contacts to display	
+		} else {
+			System.out.println("You have currently have no contacts.\n");
 		}
-		
-		//Print sorted temp Array
-		Arrays.sort(temp);
-		for (int i = 0; i < temp.length; i++) {
-			System.out.println(temp[i]);
-		}
-		System.out.println();
 	}
 	
 	//Search for contact info based on any data field
@@ -210,10 +216,10 @@ public class ContactsApp {
 //			}
 		//Store matching contacts by info into temp ArrayList
 		} else if (choice.equalsIgnoreCase("Info")) {
-			//TODO Search using contact info (display same way as above)
 			System.out.print("Type in all or part of the phone number or email address you want to search for(Phone # format must be the same(e.g. using hyphens)): ");
 			String searchString = USERINPUT.nextLine();
 			System.out.println();
+			
 			for (Contact contact: contacts) {
 				if (contact.getPersonalPhoneNumber().contains(searchString)
 				|| contact.getWorkPhoneNumber().contains(searchString)
@@ -237,14 +243,27 @@ public class ContactsApp {
 		}
 	}
 	
-	//INCOMPLETE!!! Delete a contact from contacts ArrayList
+	//Delete a contact from contacts ArrayList
 	public static void deleteContact(ArrayList<Contact> contacts) {
 		ArrayList<Contact> temp = new ArrayList<>();
 		
+		//Search for contact to delete by name
 		System.out.println("Input the name of the contact you would like to delete.");
 		temp = searchByName(contacts);
 		
-		
+		//If contact was found, delete contact. If multiple contacts were found, user chooses which to delete.
+		if (temp.size() > 0) {
+			if (temp.size() > 1) {
+				Contact tempContact = multipleMatchesFound(temp, "delete");
+				contacts.remove(tempContact);
+			} else {
+				contacts.remove(0);
+			}
+			
+		System.out.println("Deletion complete.\n");
+		} else {
+			System.out.println("No matches found. \n");
+		}
 	}
 	
 	//Returns an Array of every contact with the matching name and their info
@@ -266,6 +285,44 @@ public class ContactsApp {
 			}
 		}
 		return temp;
+	}
+	
+	//Return a single contact when multiple matches are found for deleteContact or modifyContact. String s signifies which method it's coming from.
+	public static Contact multipleMatchesFound(ArrayList<Contact> temp, String s) {
+		//If temp is not empty, print all Contact objects prefixed with a number.
+		if (temp.size() > 0) {
+			int count = 1;
+			System.out.println("Multiple matches found.");
+			for (Contact contact: temp) {
+				System.out.println(count + ") " + contact);
+				count++;
+			}
+			
+			//User chooses which Contact to return
+			boolean correctInput = false;
+			int choice = 0;
+			while (!correctInput) {
+				System.out.printf("Please choose the number of which contact you would like to %s\n", s);
+				try {
+					choice = USERINPUT.nextInt();
+					USERINPUT.nextLine();
+					correctInput = true;
+				} catch (InputMismatchException ex) {
+					System.out.println("Invalid Input. Must be an integer");
+					USERINPUT.nextLine();
+				}
+			}
+			
+			//If user choice is on the list, return that Contact. Else return a new Contact.
+			if (choice >= 1 && choice <= temp.size()) {
+				return temp.get(choice -1);
+			} else {
+				return new Contact();
+			}
+		//If temp is empty, return a new Contact.
+		} else {
+			return new Contact();
+		}
 	}
 	
 	//Substitute for String.repeat method since it doesn't work with JavaSE 1.8
