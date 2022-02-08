@@ -19,9 +19,15 @@ public class ContactsApp {
 		if (args.length == 1) {
 			//TODO upload contacts from file in CL arg
 			//File equals arg, if file exists input contacts
+			File file = new File(args[0]);
+			if (file.exists()) {
+				addContactsFromFile(contacts, file);
 			//else say no file and offer to handwrite file or manually input contacts
+			} else {
+				System.out.println("Command Line Argument file not found.\n");
+			}
+		//If no command line argument file was input, get file name from user or user creates new contacts list
 		} else {
-			//If no command line argument file was input, or input file did not exist, get file name from user or user creates new contacts list
 			while (contacts.isEmpty()) {
 				System.out.println("Would you like to input a file name to input contacts, or create a new contacts list?");
 				System.out.print("Type \"File\" or \"New\": ");
@@ -30,8 +36,14 @@ public class ContactsApp {
 				
 				//If user inputs File, execute file upload method.
 				if (answer.equalsIgnoreCase("File")) {
-					//TODO
-					System.out.println("Execute file upload method");
+					System.out.print("Input file name: ");
+					File file = new File(USERINPUT.nextLine());
+					System.out.println();
+					if (file.exists()) {
+					addContactsFromFile(contacts, file);
+					} else {
+						System.out.println("File not found.");
+					}
 				//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
 				} else if (answer.equalsIgnoreCase("New")){
 					addContacts(contacts);
@@ -331,12 +343,12 @@ public class ContactsApp {
 				//Assume they said to create new file
 				System.out.printf("Type in the name of the file you would like to save your contacts to: ");
 				file = new File (USERINPUT.nextLine());
-				PrintWriter fileInput = new PrintWriter(file);
+				PrintWriter fileOutput = new PrintWriter(file);
 				for (Contact contact: contacts) {
-					fileInput.printf("%s %s %s %s %s %s", contact.getFirstName(), contact.getLastName(), contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
-					fileInput.println();
+					fileOutput.printf("%s %s %s %s %s %s", contact.getFirstName(), contact.getLastName(), contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
+					fileOutput.println();
 				}
-				fileInput.close();
+				fileOutput.close();
 			} else if (answer.equalsIgnoreCase("No") || answer.equalsIgnoreCase("N")) {
 				goodInput = true;
 			} else {
@@ -344,6 +356,21 @@ public class ContactsApp {
 			}
 		}
 		System.exit(0);
+	}
+	
+	public static void addContactsFromFile(ArrayList<Contact> contacts, File file) throws FileNotFoundException {
+			Scanner fileInput = new Scanner(file);	
+				while (fileInput.hasNext()) {
+						Contact contact = new Contact();
+						contact.setFirstName(fileInput.next());
+						contact.setLastName(fileInput.next());
+						contact.setPersonalPhoneNumber(fileInput.next());
+						contact.setWorkPhoneNumber(fileInput.next());
+						contact.setPersonalEmailAddress(fileInput.next());
+						contact.setWorkEmailAddress(fileInput.next());
+						contacts.add(contact);
+				}
+				fileInput.close();
 	}
 	
 	//Returns an Array of every contact with the matching name and their info
