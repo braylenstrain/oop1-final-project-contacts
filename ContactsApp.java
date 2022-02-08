@@ -5,12 +5,13 @@
  * This program allows you to store and view contact information for any number of people.
  */
 import java.util.*;
+import java.io.*;
 
 public class ContactsApp {
 	private static final Scanner USERINPUT = new Scanner(System.in);
 	final static int NUMBER_OF_DATA_FIELDS = 6;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 	
 		ArrayList<Contact> contacts = new ArrayList<>();
 		
@@ -19,29 +20,28 @@ public class ContactsApp {
 			//TODO upload contacts from file in CL arg
 			//File equals arg, if file exists input contacts
 			//else say no file and offer to handwrite file or manually input contacts
-		}
-		
-		//If no command line argument file was input, or input file did not exist, get file name from user or user creates new contacts list
-		while (contacts.isEmpty()) {
-			System.out.println("Would you like to input a file name to input contacts, or create a new contacts list?");
-			System.out.print("Type \"File\" or \"New\": ");
-			String answer = USERINPUT.nextLine().trim();
-			System.out.println();
-			
-			//If user inputs File, execute file upload method.
-			if (answer.equalsIgnoreCase("File")) {
-				//TODO
-				System.out.println("Execute file upload method");
-			//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
-			} else if (answer.equalsIgnoreCase("New")){
-				addContacts(contacts);
-				break;
-			//Any other input restarts the while loop.	
-			} else {
-				System.out.println("Invalid input.");
+		} else {
+			//If no command line argument file was input, or input file did not exist, get file name from user or user creates new contacts list
+			while (contacts.isEmpty()) {
+				System.out.println("Would you like to input a file name to input contacts, or create a new contacts list?");
+				System.out.print("Type \"File\" or \"New\": ");
+				String answer = USERINPUT.nextLine().trim();
+				System.out.println();
+				
+				//If user inputs File, execute file upload method.
+				if (answer.equalsIgnoreCase("File")) {
+					//TODO
+					System.out.println("Execute file upload method");
+				//If user inputs New, execute create new contacts method. Break if the user enters 0 for number of new contacts.	
+				} else if (answer.equalsIgnoreCase("New")){
+					addContacts(contacts);
+					break;
+				//Any other input restarts the while loop.	
+				} else {
+					System.out.println("Invalid input.");
+				}
 			}
 		}
-		
 		//Send user to homepage
 		String choice = "";
 		while (!choice.equals("6")) {
@@ -57,14 +57,13 @@ public class ContactsApp {
 			System.out.println();
 			
 			//Activate action based on user input
-			//TODO replace print statements with methods
 			switch (choice) {
 			case "1": displayContacts(contacts); break;
 			case "2": addContacts(contacts); break;
 			case "3": deleteContact(contacts); break;
 			case "4": modifyContact(contacts); break;
 			case "5": searchContacts(contacts); break;
-			case "6": System.out.println("exitProgram"); break;
+			case "6": exit(contacts); break;
 			default: System.out.println("Invalid input, please type a number 1-6.");
 			}
 		}
@@ -317,6 +316,36 @@ public class ContactsApp {
 		}
 	}
 	
+	public static void exit(ArrayList<Contact> contacts) throws FileNotFoundException {
+		boolean goodInput = false;
+		File file;
+		
+		while (!goodInput) {
+			System.out.print("Would you like to save your contacts before exiting? (Type \"Yes\" or \"No\"): ");
+			String answer = USERINPUT.nextLine().trim();
+			System.out.println();
+			
+			if (answer.equalsIgnoreCase("Yes") || answer.equalsIgnoreCase("Y")) {
+				goodInput = true;
+				//TODO if used file to upload, ask if they want to use that file or create new
+				//Assume they said to create new file
+				System.out.printf("Type in the name of the file you would like to save your contacts to: ");
+				file = new File (USERINPUT.nextLine());
+				PrintWriter fileInput = new PrintWriter(file);
+				for (Contact contact: contacts) {
+					fileInput.printf("%s %s %s %s %s %s", contact.getFirstName(), contact.getLastName(), contact.getPersonalPhoneNumber(), contact.getWorkPhoneNumber(), contact.getPersonalEmailAddress(), contact.getWorkEmailAddress());
+					fileInput.println();
+				}
+				fileInput.close();
+			} else if (answer.equalsIgnoreCase("No") || answer.equalsIgnoreCase("N")) {
+				goodInput = true;
+			} else {
+				System.out.println("Invalid Input.");
+			}
+		}
+		System.exit(0);
+	}
+	
 	//Returns an Array of every contact with the matching name and their info
 	public static ArrayList<Contact> searchByName(ArrayList<Contact> contacts) {
 		ArrayList<Contact> temp = new ArrayList<>();
@@ -383,8 +412,4 @@ public class ContactsApp {
 		}
 	}
 	
-	//for loop to print out contact info
-//	for (Contact contact: contacts) {
-//		System.out.println(contact);
-//	}
 }
